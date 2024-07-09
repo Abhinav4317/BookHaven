@@ -18,8 +18,10 @@ const NewBlog = () => {
         headers: { "Content-Type": "multipart/form-data" },
       })
       .then(({ data }) => {
+        //console.log(data);
         const file = data.files[0];
-        setPhoto(file.filename);
+        console.log(file);
+        setPhoto(file.secure_url);
       });
     //console.log(file);
   };
