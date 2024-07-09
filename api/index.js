@@ -50,7 +50,7 @@ function getUserDataFromToken(req) {
   });
 }
 
-app.post("/register", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
   if (!name || !email || !password) {
     return res.status(422).json({ error: "All fields are required" });
@@ -74,7 +74,7 @@ app.post("/register", async (req, res) => {
   }
 });
 
-app.post("/login", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await User.findOne({ email });
@@ -102,7 +102,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-app.get("/profile", async (req, res) => {
+app.get("/api/profile", async (req, res) => {
   try {
     const token = req.cookies.token;
     if (!token) {
@@ -126,11 +126,11 @@ app.get("/profile", async (req, res) => {
   }
 });
 
-app.post("/logout", (req, res) => {
+app.post("/api/logout", (req, res) => {
   res.clearCookie("token").json(true);
 });
 
-app.post("/upload-book", async (req, res) => {
+app.post("/api/upload-book", async (req, res) => {
   const { title, author, imageURL, category, description, linkPDF, price } =
     req.body;
   const imagePath = await uploadImageFromUrlToCloudinary(imageURL);
@@ -152,7 +152,7 @@ app.post("/upload-book", async (req, res) => {
   }
 });
 
-app.get("/books", async (req, res) => {
+app.get("/api/books", async (req, res) => {
   try {
     const booksDoc = await Book.find({});
     res.json(booksDoc);
@@ -161,7 +161,7 @@ app.get("/books", async (req, res) => {
   }
 });
 
-app.get("/book/:id", async (req, res) => {
+app.get("/api/book/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const bookDoc = await Book.findById(id);
@@ -171,7 +171,7 @@ app.get("/book/:id", async (req, res) => {
   }
 });
 
-app.get("/books-user", async (req, res) => {
+app.get("/api/books-user", async (req, res) => {
   try {
     const userData = await getUserDataFromToken(req);
     if (userData) {
@@ -185,7 +185,7 @@ app.get("/books-user", async (req, res) => {
   }
 });
 
-app.put("/book-edit", async (req, res) => {
+app.put("/api/book-edit", async (req, res) => {
   const { id, title, author, imageURL, category, description, linkPDF, price } =
     req.body;
   const bookDoc = await Book.findById(id);
@@ -223,7 +223,7 @@ app.put("/book-edit", async (req, res) => {
   }
 });
 
-app.delete("/delete/:id", async (req, res) => {
+app.delete("/api/delete/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const book = await Book.findByIdAndDelete(id);
@@ -236,7 +236,7 @@ app.delete("/delete/:id", async (req, res) => {
   }
 });
 
-app.post("/upload", upload.array("photos", 100), async (req, res) => {
+app.post("/api/upload", upload.array("photos", 100), async (req, res) => {
   const files = req.files;
   try {
     const uploadPromises = files.map((file) =>
@@ -249,7 +249,7 @@ app.post("/upload", upload.array("photos", 100), async (req, res) => {
   }
 });
 
-app.post("/create-blog", async (req, res) => {
+app.post("/api/create-blog", async (req, res) => {
   const { title, photo, desc, blogtext } = req.body;
   try {
     const userData = await getUserDataFromToken(req);
@@ -272,7 +272,7 @@ app.post("/create-blog", async (req, res) => {
   }
 });
 
-app.get("/blogs", async (req, res) => {
+app.get("/api/blogs", async (req, res) => {
   try {
     const userData = await getUserDataFromToken(req);
     if (userData) {
@@ -292,7 +292,7 @@ app.get("/blogs", async (req, res) => {
   }
 });
 
-app.get("/blog-sp/:id", async (req, res) => {
+app.get("/api/blog-sp/:id", async (req, res) => {
   const { id } = req.params;
   try {
     const blogDoc = await Blog.findById(id).populate("authorId");
@@ -302,7 +302,7 @@ app.get("/blog-sp/:id", async (req, res) => {
   }
 });
 
-app.get("/all-blogs", async (req, res) => {
+app.get("/api/all-blogs", async (req, res) => {
   try {
     res.json(await Blog.find({}).populate("authorId"));
   } catch (error) {
@@ -310,7 +310,7 @@ app.get("/all-blogs", async (req, res) => {
   }
 });
 
-app.post("/payment", async (req, res) => {
+app.post("/api/payment", async (req, res) => {
   const { product, token } = req.body;
   const idempontencyKey = uuidv4();
 
@@ -345,7 +345,7 @@ app.post("/payment", async (req, res) => {
   }
 });
 
-app.post("/order", async (req, res) => {
+app.post("/api/order", async (req, res) => {
   const { product, buyer, email, price } = req.body;
   try {
     const orderDoc = await Order.create({
@@ -360,7 +360,7 @@ app.post("/order", async (req, res) => {
   }
 });
 
-app.get("/search", async (req, res) => {
+app.get("/api/search", async (req, res) => {
   const { query } = req.query;
   try {
     const booksDoc = await Book.find({
@@ -376,7 +376,7 @@ app.get("/search", async (req, res) => {
   }
 });
 
-app.get("/bought-books", async (req, res) => {
+app.get("/api/bought-books", async (req, res) => {
   try {
     const userData = await getUserDataFromToken(req);
     if (userData) {
@@ -394,7 +394,7 @@ app.get("/bought-books", async (req, res) => {
   }
 });
 
-app.get("/orders", async (req, res) => {
+app.get("/api/orders", async (req, res) => {
   try {
     const userData = await getUserDataFromToken(req);
     if (userData) {
