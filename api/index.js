@@ -24,7 +24,8 @@ app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:5173",
+    origin:
+      "https://book-haven-m2n8ul5rm-abhinav-gangwars-projects.vercel.app/",
   })
 );
 
@@ -416,3 +417,24 @@ app.get("/api/orders", async (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+{
+  /**
+here is the complete code if you want to populate database with json data
+also make sure you create schema and model before trying to store data
+
+const fs = require("fs");
+const path = require("path");
+
+const filePath = path.join(__dirname, "bookData.json");
+const data = JSON.parse(fs.readFileSync(filePath, "utf-8"));
+
+function func() {
+  Book.insertMany(data)
+    .then(() => console.log("data inserted successfully"))
+    .catch((err) => console.log(err));
+}
+func();
+
+  
+*/
+}
